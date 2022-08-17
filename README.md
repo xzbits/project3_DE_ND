@@ -61,6 +61,13 @@ python dashboard_users_insight.py
 python dashboard_months_activity_insight.py
 ```
 
+## Step 4: AWS Redshift cluster and IAM role deletion
+Delete the Cluster and IAM role which are generated at Step 1
+```commandline
+python delete_cluster_iam_role.py
+```
+
+
 # Repository
 ## `s3://udacity-dend` S3 Bucket
 The `s3://udacity-dend` S3 Bucket has 2 separate folders, 
