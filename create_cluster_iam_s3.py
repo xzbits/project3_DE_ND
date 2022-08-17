@@ -6,7 +6,7 @@ import boto3
 
 
 if __name__ == "__main__":
-    aws_access_info = AWSIdentity('phong_aws_credentials.cfg')
+    aws_access_info = AWSIdentity('aws_credentials.cfg')
     cluster_info = AWSCluster('dwh.cfg')
     session = boto3.Session(aws_access_key_id=aws_access_info.aws_identity['aws_key'],
                             aws_secret_access_key=aws_access_info.aws_identity['aws_secret'],

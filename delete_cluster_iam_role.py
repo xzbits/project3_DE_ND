@@ -3,7 +3,7 @@ from aws_identity_redshift_cluster_config import AWSIdentity, AWSCluster
 
 
 if __name__ == "__main__":
-    aws_identity = AWSIdentity('phong_aws_credentials.cfg')
+    aws_identity = AWSIdentity('aws_credentials.cfg')
     aws_cluster = AWSCluster('dwh.cfg')
     session = boto3.Session(aws_access_key_id=aws_identity.aws_identity['aws_key'],
                             aws_secret_access_key=aws_identity.aws_identity['aws_secret'],
