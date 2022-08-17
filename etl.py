@@ -30,6 +30,17 @@ def insert_tables(cur, conn):
 
 
 def main():
+    """
+    - Establishes connection with the sparkify database in
+    AWS Redshift clustter and gets cursor to it.
+
+    - Load JSON files to staging_events and staging_songs tables.
+
+    - Insert data into fact and dim tables by get data from staging tables.
+
+    - Finally, close the connection.
+    :return: None
+    """
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 

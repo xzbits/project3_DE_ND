@@ -24,7 +24,6 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 staging_events_table_create = ("""
 CREATE TABLE IF NOT EXISTS staging_events
 (
-    staging_event_id INT8 IDENTITY(0, 1) PRIMARY KEY,
     artist VARCHAR(300),
     auth VARCHAR(20),
     first_name VARCHAR(300),
@@ -36,7 +35,7 @@ CREATE TABLE IF NOT EXISTS staging_events
     location VARCHAR(300),
     method VARCHAR(20),
     page VARCHAR(300),
-    registration NUMERIC,
+    registration VARCHAR(300),
     session_id INT,
     song VARCHAR(300),
     status INT,
@@ -49,17 +48,16 @@ CREATE TABLE IF NOT EXISTS staging_events
 staging_songs_table_create = ("""
 CREATE TABLE IF NOT EXISTS staging_songs
 (
-    staging_song_id INT8 IDENTITY(0, 1) PRIMARY KEY,
-    num_songs INT NOT NULL,
-    artist_id VARCHAR(30) NOT NULL,
+    num_songs INT,
+    artist_id VARCHAR(30),
     artist_latitude NUMERIC,
     artist_longitude NUMERIC,
     artist_location VARCHAR(300),
-    artist_name VARCHAR(300) NOT NULL,
-    song_id VARCHAR(30) NOT NULL,
-    title VARCHAR(300) NOT NULL,
-    duration NUMERIC NOT NULL,
-    year INT NOT NULL
+    artist_name VARCHAR(300),
+    song_id VARCHAR(30),
+    title VARCHAR(300),
+    duration NUMERIC,
+    year INT
 )
 """)
 
@@ -174,7 +172,8 @@ JOIN
     FROM songs AS s
     JOIN artists AS a ON s.artist_id = a.artist_id
 ) AS sa
-ON se.song=sa.song_name AND se.artist=sa.artist_name AND se.length=sa.duration;
+ON se.song=sa.song_name AND se.artist=sa.artist_name AND se.length=sa.duration
+WHERE se.page = 'NextSong';
 """)
 
 user_table_insert = ("""
@@ -192,8 +191,15 @@ SELECT
     last_name,
     gender,
     level
-FROM staging_events
-WHERE user_id IS NOT NULL AND page = 'NextSong';
+FROM 
+(
+    SELECT MAX(ts), user_id, MAX(first_name) as first_name, MAX(last_name) as last_name, 
+    MIN(gender) as gender, MIN(level) as level
+    FROM staging_events
+    GROUP BY user_id
+    ORDER BY user_id
+) gg
+WHERE gg.user_id IS NOT NULL;
 """)
 
 song_table_insert = ("""
